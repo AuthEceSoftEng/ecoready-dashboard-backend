@@ -1,15 +1,9 @@
 {
-  "name": "template-backend",
+  "name": "ecoready-dashboard-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "A template backend.",
-  "repository": "github:robotics-4-all/template-backend",
-  "contributors": [
-    {
-      "name": "Thomas Karanikiotis",
-      "email": "tkaranikio@gmail.com"
-    }
-  ],
+  "description": "Backend of the ECO-READY Dashboard",
+  "repository": "github:AuthEceSoftEng/ecoready-dashboard-backend",
   "type": "module",
   "main": "index.js",
   "scripts": {
