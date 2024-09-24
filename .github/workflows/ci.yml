@@ -1,0 +1,41 @@
+name: ci
+
+on: push
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      PORT: 3000
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.14.0"
+          cache: npm
+
+      - name: 📥 Download deps
+        run: npm i --legacy-peer-deps
+
+      - name: 🧪 Run test script
+        run: npm test
+  deploy:
+    if: ${{ false }}  # disable for now
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/template-backend
+            git reset --hard origin/main
+            git pull https://${{ secrets.CLONE_TOKEN }}@github.com/robotics-4-all/template-backend main
+            bash -ci 'npm i --legacy-peer-deps'
+            bash -ci 'pm2 restart server'
