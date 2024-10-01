@@ -9,6 +9,7 @@ const init = async () => {
 	} = process.env;
 
 	mongoose.set("strictQuery", false);
+	console.log(DATABASE_URL)
 	const connection = await mongoose.connect(DATABASE_URL).catch((error) => {
 		Sentry.captureException(error);
 		console.error(error.message);
