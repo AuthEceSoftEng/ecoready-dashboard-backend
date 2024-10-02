@@ -19,9 +19,15 @@ import { setServerTimeout } from "./src/middleware/index.js";
 import { attachUser, init } from "./src/utils/index.js";
 import initializeWebsocket from "./websocket.js";
 
-const { NODE_ENV, PORT } = process.env;
+const { NODE_ENV, SENTRY_DSN, SENTRY_ENVIRONMENT, PORT } = process.env;
 
-Sentry.init({ enabled: NODE_ENV === "production" });
+Sentry.init({
+	enabled: NODE_ENV === "production",
+	dsn: SENTRY_DSN,
+	environment: SENTRY_ENVIRONMENT,
+	tracesSampleRate: 1,
+	profilesSampleRate: 1,
+});
 
 // Initialize mongoDB connection
 init();
