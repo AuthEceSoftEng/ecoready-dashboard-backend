@@ -17,14 +17,15 @@ const sendEmail = (data, email, templateId) => (
 	})
 );
 
-const forgotPassword = (to, token) => {
+const forgotPassword = (username, to, token) => {
 	const msg = {
 		from: SENDGRID_EMAIL,
-		templateId: "d-7815e26a36f7451c8cf2e7b541a796af",
+		templateId: "d-f3eb266de83849139e8d6d5fd696a077",
 
 		to,
 
 		dynamicTemplateData: {
+			Username: username,
 			ResetPasswordUrl: `${CLIENT_URL}/reset-password?token=${token}`,
 		},
 	};
@@ -35,7 +36,7 @@ const forgotPassword = (to, token) => {
 const inviteUser = (to, token) => {
 	const msg = {
 		from: SENDGRID_EMAIL,
-		templateId: "d-dd62b1b2c55748d4bf492a5d7062bf9a",
+		templateId: "d-c929e517b6564159a4d6fb7ccdadd54d",
 
 		to,
 

@@ -191,7 +191,7 @@ router.post("/forgotpassword",
 				token,
 			}).save();
 
-			await email.forgotPassword(user.email, token);
+			await email.forgotPassword(username, user.email, token);
 			return res.json({
 				success: true,
 				message: "Forgot password e-mail sent.",
