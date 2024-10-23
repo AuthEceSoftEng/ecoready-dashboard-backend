@@ -250,4 +250,22 @@ router.post("/resetpassword", async (req, res) => {
 	}
 });
 
+// import { CollectionDataManagement } from "../utils/index.js";
+// router.post("/mycall", async (req, res) => {
+// 	try {
+// 		const { organization, project, collection, accessKey } = req.body;
+// 		const response = await CollectionDataManagement.getData(organization, project, collection, accessKey);
+// 		console.log(response[0]);
+// 		return res.json({success: true, message: response});
+// 	} catch (error) {
+// 		console.log(error);
+// 		Sentry.captureException(error);
+// 		return res.status(500).json({ message: "Something went wrong." });
+// 	}
+// 	//	return res.json({
+// 	//		success: true,
+// 	//		message: "Yo, It works!",
+// 	//	});
+// });
+
 export default router;
