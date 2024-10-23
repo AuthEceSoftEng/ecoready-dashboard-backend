@@ -63,7 +63,6 @@ const getDataStatistics = (organization, project, collection, accessKey, params 
 		{
 			... restParams,
 			filters: params.filters,
-			order: params.order,
 			group_by: params.group_by,
 		}
 	);
