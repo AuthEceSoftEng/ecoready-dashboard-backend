@@ -42,7 +42,6 @@ const getCollectionInfo = (organization, project, collection, accessKey) =>
 const getData = (organization, project, collection, accessKey, params = {}) => {
 	const parsedParams = JSON.parse(params); // Parse search params into an object
 	const { filters, order_by, ...restParams } = parsedParams;
-
 	return EcoReadyServicesApi(accessKey).get(
 		`api/organizations/${organization}/projects/${project}/collections/${collection}/get_data`, 
 		{
@@ -57,13 +56,12 @@ const createData = (organization, project, collection, accessKey, body) =>
 const getDataStatistics = (organization, project, collection, accessKey, params = {}) => { 
 	const parsedParams = JSON.parse(params); // Parse search params into an object
 	const { filters, order_by, ...restParams } = parsedParams;
-
 	return EcoReadyServicesApi(accessKey).get(
 		`api/organizations/${organization}/projects/${project}/collections/${collection}/statistics`, 
 		{
 			... restParams,
-			filters: params.filters,
-			group_by: params.group_by,
+			filters: JSON.stringify(filters),
+			group_by: JSON.stringify(group_by),
 		}
 	);
 };

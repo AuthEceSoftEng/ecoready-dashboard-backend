@@ -23,8 +23,8 @@ router.get("/getdatastatistics", async (req, res) => {
 	// const collection = 'sensors_data';
 	// const accessKey = '76c8041409329428763ed6b1a7c31cc9e16119b4f57c34d007d644a4fac2b331';
 	try {
-		const { organization, project, collection, accessKey } = req.query;
-		const response = await CollectionDataManagement.getDataStatistics(organization, project, collection, accessKey);
+		const { organization, project, collection, accessKey, params } = req.query;
+		const response = await CollectionDataManagement.getDataStatistics(organization, project, collection, accessKey, params);
 		return res.json(response);
 	} catch (error) {
 		Sentry.captureException(error);
