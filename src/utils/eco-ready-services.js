@@ -1,5 +1,4 @@
 import queryString from "query-string";
-import qs from "qs";
 import got from "got";
 
 // const prefixUrl = process.env.ECOREADY_SERVICES_URL;
