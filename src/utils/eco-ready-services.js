@@ -49,13 +49,13 @@ const getData = (organization, project, collection, accessKey, params = {}) => {
 const createData = (organization, project, collection, accessKey, body) => EcoReadyServicesApi(accessKey).post(`api/organizations/${organization}/projects/${project}/collections/${collection}/send_data`, body);
 const getDataStatistics = (organization, project, collection, accessKey, params = {}) => {
 	const parsedParams = JSON.parse(params); // Parse search params into an object
-	const { filters, groupBy, ...restParams } = parsedParams;
+	const { filters, ...restParams } = parsedParams;
 	return EcoReadyServicesApi(accessKey).get(
 		`api/organizations/${organization}/projects/${project}/collections/${collection}/statistics`,
 		{
 			...restParams,
 			filters: JSON.stringify(filters),
-			group_by: JSON.stringify(groupBy),
+			// group_by: JSON.stringify(groupBy),
 		},
 	);
 };
