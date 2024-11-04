@@ -1,13 +1,20 @@
 import express from "express";
 import Sentry from "@sentry/node";
+import dotenv from "dotenv";
 
 import { CollectionDataManagement } from "../utils/index.js";
 
+dotenv.config();
+
 const router = express.Router({ mergeParams: true });
+
+// Parse the ACCESS_KEY environment variable as a JSON object
+const accessKeys = JSON.parse(process.env.ACCESS_KEY);
 
 router.get("/getdata", async (req, res) => {
 	try {
-		const { organization, project, collection, accessKey, params } = req.query;
+		const { organization, project, collection, params } = req.query;
+		const accessKey = accessKeys[organization];
 		// console.log('Params in endpoint', params)
 		const response = await CollectionDataManagement.getData(organization, project, collection, accessKey, params);
 		return res.json(response);
@@ -23,7 +30,8 @@ router.get("/getdatastatistics", async (req, res) => {
 	// const collection = 'sensors_data';
 	// const accessKey = '76c8041409329428763ed6b1a7c31cc9e16119b4f57c34d007d644a4fac2b331';
 	try {
-		const { organization, project, collection, accessKey, params } = req.query;
+		const { organization, project, collection, params } = req.query;
+		const accessKey = accessKeys[organization];
 		const response = await CollectionDataManagement.getDataStatistics(organization, project, collection, accessKey, params);
 		return res.json(response);
 	} catch (error) {
