@@ -22,6 +22,8 @@ jobs:
 
       - name: 🧪 Run test script
         run: npm test
+        env:
+          ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
   deploy:
     needs: ci
     runs-on: ubuntu-latest
