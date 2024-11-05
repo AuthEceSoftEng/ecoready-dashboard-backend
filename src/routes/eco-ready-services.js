@@ -5,8 +5,6 @@ import dotenv from "dotenv";
 import { CollectionDataManagement } from "../utils/index.js";
 
 dotenv.config();
-console.log("key", process.env.ACCESS_KEY);
-console.log("url", process.env.DATABASE_URL);
 
 const router = express.Router({ mergeParams: true });
 
