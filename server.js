@@ -15,6 +15,7 @@ import Sentry from "@sentry/node";
 import helmet from "helmet";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import swaggerUiDist from "swagger-ui-dist";
 
 import swaggerOptions from "./swagger.js"; // Import Swagger configuration
 import routes from "./src/routes/index.js";
@@ -68,6 +69,8 @@ app.use(
 		),
 	),
 );
+
+app.use("/api-docs", express.static(swaggerUiDist.getAbsoluteFSPath()));
 
 app.use(
 	"/api-docs",
