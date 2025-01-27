@@ -15,7 +15,6 @@ import Sentry from "@sentry/node";
 import helmet from "helmet";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import swaggerUiDist from "swagger-ui-dist";
 
 import swaggerOptions from "./swagger.js"; // Import Swagger configuration
 import routes from "./src/routes/index.js";
@@ -70,7 +69,10 @@ app.use(
 	),
 );
 
-app.use("/api-docs", express.static(swaggerUiDist.getAbsoluteFSPath()));
+app.use("/api-docs.json", (req, res) => {
+	res.setHeader("Content-Type", "application/json");
+	res.send(swaggerSpec); // Serve the Swagger specification as JSON
+});
 
 app.use(
 	"/api-docs",
@@ -79,6 +81,9 @@ app.use(
 		customCss: ".swagger-ui .topbar { display: none } /* Removes the entire top bar */",
 		customSiteTitle: "ECO-READY Dashboard API",
 		customfavIcon: "./src/assets/images/favicon.ico",
+		swaggerOptions: {
+			url: "/api-docs.json", // Points to the JSON spec
+		},
 	}),
 );
 
