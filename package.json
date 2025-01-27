@@ -76,6 +76,8 @@
     "query-string": "^9.1.0",
     "ramda": "^0.28.0",
     "serve-favicon": "^2.5.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "ws": "^8.12.1",
     "yup": "^1.0.0"
   }

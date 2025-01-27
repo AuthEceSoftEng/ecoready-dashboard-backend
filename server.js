@@ -19,6 +19,12 @@ import { setServerTimeout } from "./src/middleware/index.js";
 import { attachUser, init } from "./src/utils/index.js";
 import initializeWebsocket from "./websocket.js";
 
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import swaggerOptions from "./swagger.js"; // Import Swagger configuration
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions); // Generate Swagger documentation
+
 const { NODE_ENV, SENTRY_DSN, SENTRY_ENVIRONMENT, PORT } = process.env;
 
 Sentry.init({
@@ -48,6 +54,12 @@ app.use(express.json({ limit: "1mb" }));
 app.use((req, _, next) => { req.body ||= {}; next(); });
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 app.use(favicon(path.join(path.dirname(fileURLToPath(import.meta.url)), "src", "assets", "images", "favicon.ico")));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+	customCss: `.swagger-ui .topbar { display: none } /* Removes the entire top bar */`,
+    customSiteTitle: 'ECO-READY Dashboard API',
+    customfavIcon: './src/assets/images/favicon.ico'
+}));
 
 app.use("/api", routes);
 

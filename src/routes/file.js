@@ -58,6 +58,48 @@ const router = express.Router({ mergeParams: true });
 /*
 	Delete a file from server
 */
+/**
+ * @swagger
+ * /file/delete:
+ *   post:
+ *     tags:
+ *       - Files
+ *     summary: Delete a file
+ *     description: Deletes a file from the server and removes its parent folder if it is empty.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               folder:
+ *                 type: string
+ *                 example: "project123"
+ *               saveName:
+ *                 type: string
+ *                 example: "1693069163123-myfile.txt"
+ *     responses:
+ *       200:
+ *         description: File deleted successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Something went wrong."
+ */
 router.post("/delete/", (req, res) => {
 	try {
 		const { folder, saveName } = req.body;
@@ -80,6 +122,54 @@ router.post("/delete/", (req, res) => {
 	Upload a file to server and
 	handle the appropriate info
 */
+/**
+ * @swagger
+ * /file/:
+ *   post:
+ *     tags:
+ *       - Files
+ *     summary: Upload a file
+ *     description: Uploads a file to the server and stores relevant file information.
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               folder:
+ *                 type: string
+ *                 example: "project123"
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: File uploaded successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 originalName:
+ *                   type: string
+ *                   example: "myfile.txt"
+ *                 saveName:
+ *                   type: string
+ *                   example: "1693069163123-myfile.txt"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Something went wrong."
+ */
 router.post("/", upload, (req, res) => {
 	try {
 		const { folder, originalName, saveName } = req.body;
@@ -101,6 +191,57 @@ router.post("/", upload, (req, res) => {
 	remove the old one and
 	handle the appropriate info
 */
+/**
+ * @swagger
+ * /file/:
+ *   put:
+ *     tags:
+ *       - Files
+ *     summary: Re-upload a file
+ *     description: Replaces an existing file with a new one and removes the old file.
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               folder:
+ *                 type: string
+ *                 example: "project123"
+ *               oldFile:
+ *                 type: string
+ *                 example: "1693069163123-myfile.txt"
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: File replaced successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 originalName:
+ *                   type: string
+ *                   example: "newfile.txt"
+ *                 saveName:
+ *                   type: string
+ *                   example: "1693069200000-newfile.txt"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Something went wrong."
+ */
 router.put("/", upload, (req, res) => {
 	try {
 		const { oldFile, folder, originalName, saveName } = req.body;
