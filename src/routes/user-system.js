@@ -569,8 +569,8 @@ router.post("/resetpassword", async (req, res) => {
 	}
 });
 
-//import { CollectionDataManagement } from "../utils/index.js";
-//router.post("/mycall", async (req, res) => {
+// import { CollectionDataManagement } from "../utils/index.js";
+// router.post("/mycall", async (req, res) => {
 //	try {
 //		const { organization, project, collection, accessKey } = req.body;
 //		const response = await CollectionDataManagement.getData(organization, project, collection, accessKey);
@@ -585,6 +585,6 @@ router.post("/resetpassword", async (req, res) => {
 //	//		success: true,
 //	//		message: "Yo, It works!",
 //	//	});
-//});
+// });
 
 export default router;
