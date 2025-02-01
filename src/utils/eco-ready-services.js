@@ -1,92 +1,134 @@
 /* eslint-disable camelcase */
 import queryString from "query-string";
 import got from "got";
+import { getIds } from './id-utils.js';
 
-// const prefixUrl = process.env.ECOREADY_SERVICES_URL;
 const prefixUrl = "https://ecoready-services.issel.ee.auth.gr";
 
 const EcoReadyServicesWrapper = (accessKey, additionalHeaders = {}) => got.extend({
-	prefixUrl,
-	retry: { limit: 5, maxRetryAfter: 1000 },
-	headers: {
-		"User-Agent": "EcoReady Dashboard",
-		Authorization: `Bearer ${accessKey}`,
-		...additionalHeaders,
-	},
+  prefixUrl,
+  retry: { limit: 5, maxRetryAfter: 1000 },
+  headers: {
+    "User-Agent": "EcoReady Dashboard",
+    "X-API-Key": accessKey,
+    ...additionalHeaders,
+  },
 });
 
 const EcoReadyServicesApi = (accessKey, additionalHeaders = {}) => {
-	const api = EcoReadyServicesWrapper(accessKey, additionalHeaders);
-	return ({
-		get: (path, searchParams) => api(path, { searchParams: queryString.stringify(searchParams) }).json(),
-		post: (path, body) => api.post(path, { json: body }).json(),
-		put: (path, body) => api.put(path, { json: body }).json(),
-		delete: (path) => api.delete(path).json(),
-	});
+  const api = EcoReadyServicesWrapper(accessKey, additionalHeaders);
+  return ({
+    get: (path, searchParams) => api(path, { searchParams: queryString.stringify(searchParams) }).json(),
+    post: (path, body) => api.post(path, { json: body }).json(),
+    put: (path, body) => api.put(path, { json: body }).json(),
+    delete: (path) => api.delete(path).json(),
+  });
 };
 
 // Collection Management
-const getCollections = (organization, project, accessKey) => EcoReadyServicesApi(accessKey).get(`api/organizations/${organization}/projects/${project}/collections`);
-const createCollection = (organization, project, accessKey, body) => EcoReadyServicesApi(accessKey).post(`api/organizations/${organization}/projects/${project}/collections`, body);
-const updateCollection = (organization, project, collection, accessKey, body) => EcoReadyServicesApi(accessKey).put(`api/organizations/${organization}/projects/${project}/collections/${collection}`, body);
-const deleteCollection = (organization, project, collection, accessKey) => EcoReadyServicesApi(accessKey).delete(`api/organizations/${organization}/projects/${project}/collections/${collection}`);
-const getCollectionInfo = (organization, project, collection, accessKey) => EcoReadyServicesApi(accessKey).get(`api/organizations/${organization}/projects/${project}/collections/${collection}`);
-
-// Collection Data Management
-const getData = (organization, project, collection, accessKey, params = {}) => {
-	const parsedParams = JSON.parse(params); // Parse search params into an object
-	const { filters, order_by, ...restParams } = parsedParams;
-	return EcoReadyServicesApi(accessKey).get(
-		`api/organizations/${organization}/projects/${project}/collections/${collection}/get_data`,
-		{
-			...restParams,
-			filters: JSON.stringify(filters),
-			order_by: JSON.stringify(order_by),
-		},
-	);
+const getCollections = (orgName, projName, accessKey) => {
+  const { orgId, projId } = getIds(orgName, projName);
+  return EcoReadyServicesApi(accessKey).get(`api/v1/organizations/${orgId}/projects/${projId}/collections`);
 };
 
-const createData = (organization, project, collection, accessKey, body) => EcoReadyServicesApi(accessKey).post(`api/organizations/${organization}/projects/${project}/collections/${collection}/send_data`, body);
-const getDataStatistics = (organization, project, collection, accessKey, params = {}) => {
-	const parsedParams = JSON.parse(params); // Parse search params into an object
-	const { filters, ...restParams } = parsedParams;
-	return EcoReadyServicesApi(accessKey).get(
-		`api/organizations/${organization}/projects/${project}/collections/${collection}/statistics`,
-		{
-			...restParams,
-			filters: JSON.stringify(filters),
-			// group_by: JSON.stringify(groupBy),
-		},
-	);
+const createCollection = (orgName, projName, accessKey, body) => {
+  const { orgId, projId } = getIds(orgName, projName);
+  return EcoReadyServicesApi(accessKey).post(`api/v1/organizations/${orgId}/projects/${projId}/collections`, body);
+};
+
+const updateCollection = (orgName, projName, collName, accessKey, body) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  return EcoReadyServicesApi(accessKey).put(`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}`, body);
+};
+
+const deleteCollection = (orgName, projName, collName, accessKey) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  return EcoReadyServicesApi(accessKey).delete(`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}`);
+};
+
+const getCollectionInfo = (orgName, projName, collName, accessKey) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  return EcoReadyServicesApi(accessKey).get(`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}`);
+};
+
+
+// Collection Data Management
+const getData = (orgName, projName, collName, accessKey, params = {}) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  const parsedParams = JSON.parse(params);
+  const { filters, order_by, ...restParams } = parsedParams;
+  
+  return EcoReadyServicesApi(accessKey).get(
+    `api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/get_data`,
+    {
+      ...restParams,
+      filters: JSON.stringify(filters),
+      order_by: JSON.stringify(order_by),
+    },
+  );
+};
+
+const createData = (orgName, projName, collName, accessKey, body) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  return EcoReadyServicesApi(accessKey).post(
+    `api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/send_data`,
+    body
+  );
+};
+
+const getDataStatistics = (orgName, projName, collName, accessKey, params = {}) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  const parsedParams = JSON.parse(params);
+  const { filters, ...restParams } = parsedParams;
+  
+  return EcoReadyServicesApi(accessKey).get(
+    `api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/statistics`,
+    {
+      ...restParams,
+      filters: JSON.stringify(filters),
+      // group_by: JSON.stringify(groupBy),
+    },
+  );
 };
 
 // Live Data Management
-const createLiveDataConsumer = (organization, project, collection, accessKey) => EcoReadyServicesApi(accessKey).post(`api/organizations/${organization}/projects/${project}/collections/${collection}/live_data`);
-const deleteLiveDataConsumer = (organization, project, collection, accessKey) => EcoReadyServicesApi(accessKey).delete(`api/organizations/${organization}/projects/${project}/collections/${collection}/live_data`);
+const createLiveDataConsumer = (orgName, projName, collName, accessKey) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  return EcoReadyServicesApi(accessKey).post(
+    `api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/live_data`
+  );
+};
+
+const deleteLiveDataConsumer = (orgName, projName, collName, accessKey) => {
+  const { orgId, projId, collId } = getIds(orgName, projName, collName);
+  return EcoReadyServicesApi(accessKey).delete(
+    `api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/live_data`
+  );
+};
 
 const CollectionManagement = {
-	getCollections,
-	createCollection,
-	updateCollection,
-	deleteCollection,
-	getCollectionInfo,
+  getCollections,
+  createCollection,
+  updateCollection,
+  deleteCollection,
+  getCollectionInfo,
 };
 
 const CollectionDataManagement = {
-	getData,
-	createData,
-	getDataStatistics,
+  getData,
+  createData,
+  getDataStatistics,
 };
 
 const LiveDataManagement = {
-	createLiveDataConsumer,
-	deleteLiveDataConsumer,
+  createLiveDataConsumer,
+  deleteLiveDataConsumer,
 };
 
 export {
-	EcoReadyServicesWrapper,
-	EcoReadyServicesApi,
-	CollectionManagement,
-	CollectionDataManagement,
-	LiveDataManagement,
+  EcoReadyServicesWrapper,
+  EcoReadyServicesApi,
+  CollectionManagement,
+  CollectionDataManagement,
+  LiveDataManagement,
 };
