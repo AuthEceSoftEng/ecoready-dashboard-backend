@@ -29,7 +29,7 @@ export function getIds(orgName, projName = null, collName = null) {
 	const coll = proj.collections[collName];
 	if (!coll) throw new Error(`Collection ${collName} not found in project ${projName}`);
 	result.collId = coll.id;
-	
+
 	return result;
 }
 
