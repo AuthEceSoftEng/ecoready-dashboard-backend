@@ -57,7 +57,6 @@ const getData = (orgName, projName, collName, accessKey, params = {}) => {
 	const { orgId, projId, collId } = getIds(orgName, projName, collName);
 	const parsedParams = JSON.parse(params);
 	const { filters, order_by, ...restParams } = parsedParams;
-  
 	return EcoReadyServicesApi(accessKey).get(
 		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/get_data`,
 		{
@@ -72,7 +71,7 @@ const createData = (orgName, projName, collName, accessKey, body) => {
 	const { orgId, projId, collId } = getIds(orgName, projName, collName);
 	return EcoReadyServicesApi(accessKey).post(
 		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/send_data`,
-		body
+		body,
 	);
 };
 
@@ -80,7 +79,6 @@ const getDataStatistics = (orgName, projName, collName, accessKey, params = {}) 
 	const { orgId, projId, collId } = getIds(orgName, projName, collName);
 	const parsedParams = JSON.parse(params);
 	const { filters, ...restParams } = parsedParams;
-  
 	return EcoReadyServicesApi(accessKey).get(
 		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/statistics`,
 		{
@@ -94,14 +92,14 @@ const getDataStatistics = (orgName, projName, collName, accessKey, params = {}) 
 const createLiveDataConsumer = (orgName, projName, collName, accessKey) => {
 	const { orgId, projId, collId } = getIds(orgName, projName, collName);
 	return EcoReadyServicesApi(accessKey).post(
-		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/live_data`
+		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/live_data`,
 	);
 };
 
 const deleteLiveDataConsumer = (orgName, projName, collName, accessKey) => {
 	const { orgId, projId, collId } = getIds(orgName, projName, collName);
 	return EcoReadyServicesApi(accessKey).delete(
-		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/live_data`
+		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/live_data`,
 	);
 };
 
