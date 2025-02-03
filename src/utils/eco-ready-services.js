@@ -57,6 +57,7 @@ const getData = (orgName, projName, collName, accessKey, params = {}) => {
 	const { orgId, projId, collId } = getIds(orgName, projName, collName);
 	const parsedParams = JSON.parse(params);
 	const { filters, order_by, ...restParams } = parsedParams;
+
 	return EcoReadyServicesApi(accessKey).get(
 		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/get_data`,
 		{
@@ -79,6 +80,7 @@ const getDataStatistics = (orgName, projName, collName, accessKey, params = {}) 
 	const { orgId, projId, collId } = getIds(orgName, projName, collName);
 	const parsedParams = JSON.parse(params);
 	const { filters, ...restParams } = parsedParams;
+
 	return EcoReadyServicesApi(accessKey).get(
 		`api/v1/organizations/${orgId}/projects/${projId}/collections/${collId}/statistics`,
 		{
