@@ -4,7 +4,7 @@ import got from "got";
 
 import { getIds } from "./id-utils.js";
 
-const prefixUrl = "https://ecoready-services.issel.ee.auth.gr";
+const prefixUrl = "https://issel01.ee.auth.gr";
 
 const EcoReadyServicesWrapper = (accessKey, additionalHeaders = {}) => got.extend({
 	prefixUrl,
