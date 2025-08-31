@@ -9,10 +9,10 @@ jobs:
       PORT: 3000
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: "16.14.0"
           cache: npm
@@ -40,5 +40,22 @@ jobs:
             cd ~/ecoready-dashboard-backend
             git reset --hard origin/main
             git pull https://${{ secrets.CLONE_TOKEN }}@github.com/AuthEceSoftEng/ecoready-dashboard-backend main
+            bash -ci 'npm i --legacy-peer-deps'
+            bash -ci 'pm2 restart server'
+  deploy-staging:
+    needs: ci
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_STAGING_HOST }}
+          username: ${{ secrets.SSH_STAGING_USERNAME }}
+          key: ${{ secrets.SSH_STAGING_KEY }}
+          port: ${{ secrets.SSH_STAGING_PORT }}
+          script: |
+            cd ~/ecoready-dashboard-backend
+            git reset --hard origin/staging
+            git pull https://${{ secrets.CLONE_TOKEN }}@github.com/AuthEceSoftEng/ecoready-dashboard-backend staging
             bash -ci 'npm i --legacy-peer-deps'
             bash -ci 'pm2 restart server'
