@@ -20,7 +20,7 @@ const sendEmail = (data, email, templateId) => (
 const forgotPassword = (username, to, token) => {
 	const msg = {
 		from: SENDGRID_EMAIL,
-		templateId: "d-f3eb266de83849139e8d6d5fd696a077",
+		templateId: "d-5d7274e488ca475293f3c558d99198a0",
 
 		to,
 
@@ -36,7 +36,7 @@ const forgotPassword = (username, to, token) => {
 const inviteUser = (to, token) => {
 	const msg = {
 		from: SENDGRID_EMAIL,
-		templateId: "d-c929e517b6564159a4d6fb7ccdadd54d",
+		templateId: "d-22c5ddebeb2849528e2d432f240a3376",
 
 		to,
 
