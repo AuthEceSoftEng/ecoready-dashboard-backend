@@ -56,6 +56,68 @@ const upload = multer({
 const router = express.Router({ mergeParams: true });
 
 /*
+	Download a file from server
+*/
+/**
+ * @swagger
+ * /file/download/{folder}/{saveName}/{originalName}:
+ *   get:
+ *     tags:
+ *       - Files
+ *     summary: Download a file
+ *     description: Downloads a specific file from the server with its original filename.
+ *     parameters:
+ *       - in: path
+ *         name: folder
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The folder where the file is stored.
+ *       - in: path
+ *         name: saveName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique saved name of the file.
+ *       - in: path
+ *         name: originalName
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The original filename to use for download.
+ *     responses:
+ *       200:
+ *         description: File sent successfully.
+ *         content:
+ *           application/octet-stream: {}
+ *       404:
+ *         description: File not found.
+ *       500:
+ *         description: Internal server error.
+ */
+router.get("/download/:folder/:saveName/:originalName?", (req, res) => {
+	try {
+		const { folder, saveName, originalName } = req.params;
+		const filePath = path.join(uploadFolderPath, folder, saveName);
+
+		if (!fs.existsSync(filePath)) {
+			return res.status(404).json({ message: "File not found." });
+		}
+
+		// Find file using saveName, but download with originalName
+		const downloadName = originalName || saveName;
+		return res.download(filePath, downloadName, (err) => {
+			if (err) {
+				Sentry.captureException(err);
+			}
+		});
+	} catch (error) {
+		Sentry.captureException(error);
+		return res.status(500).json({ message: "Something went wrong." });
+	}
+});
+
+/*
 	Delete a file from server
 */
 /**
